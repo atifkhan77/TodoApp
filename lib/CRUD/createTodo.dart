@@ -9,7 +9,7 @@ class TodoAdd {
 
       await todosRef.add({
         'title': title,
-        'description': '', // You can add more fields if required
+        'description': '',
         'createdAt': FieldValue.serverTimestamp(),
       });
 
