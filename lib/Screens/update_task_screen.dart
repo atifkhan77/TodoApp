@@ -54,17 +54,15 @@ class _UpdateTodoScreenState extends State<UpdateTodoScreen> {
                 String description = _descriptionController.text.trim();
 
                 if (title.isNotEmpty && description.isNotEmpty) {
-                  // Create a new Todo object with updated data
+        
                   Todo updatedTodo = Todo(
                     id: widget.todo.id,
                     title: title,
                     description: description,
                   );
 
-                  // Update the data in Firestore using the TodoService
                   await TodoService.updateTodo(updatedTodo as TodoVars);
 
-                  // Go back to the previous screen after updating the data
                   Navigator.of(context).pop();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
