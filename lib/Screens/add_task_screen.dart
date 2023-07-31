@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../CRUD/createTodo.dart'; // Make sure the import statement is correct
+import '../CRUD/createTodo.dart'; 
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   void dispose() {
     _taskTitleController
-        .dispose(); // Don't forget to dispose the TextEditingController
+        .dispose();
     super.dispose();
   }
 
@@ -38,15 +38,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 String taskTitle = _taskTitleController.text.trim();
                 if (taskTitle.isNotEmpty) {
                   TodoAdd.addTodo(
-                      taskTitle); // Call the addTodo function from TodoService
+                      taskTitle); 
                   Navigator.pop(
-                      context); // Go back to the previous screen after adding the todo
+                      context); 
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: const Text('Please enter a task'),
                       duration:
-                          const Duration(seconds: 2), // Set a specific duration
+                          const Duration(seconds: 2), 
                     ),
                   );
                 }
