@@ -15,14 +15,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // Function to check if a user is registered
   Future<bool> _isUserRegistered(String email) async {
     try {
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password:
-            '', // An empty password is used just for checking user existence.
+            '',
       );
       return userCredential.user != null;
     } catch (e) {
@@ -39,7 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // Check if the user is registered
     bool isRegistered = await _isUserRegistered(email);
     if (!isRegistered) {
       Fluttertoast.showToast(
@@ -48,7 +46,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     try {
-      // User logged in successfully, navigate to ToDoScreen
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => ToDoScreen(),
@@ -56,7 +53,6 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } catch (e) {
       debugPrint('Login error: $e');
-      // Display error message to the user based on the specific exception
       Fluttertoast.showToast(
         msg: 'Login failed. Please check your email and password.',
       );
@@ -64,7 +60,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleRegistration() async {
-    // Navigate to the SignupScreen for registration
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const SignupScreen(),
@@ -72,14 +67,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     try {
-      // User registered successfully, navigate to ToDoScreen
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const ToDoScreen(),
         ),
       );
     } catch (e) {
-      // Display error message to the user based on the specific exception
       Fluttertoast.showToast(
         msg: 'Registration failed. Please try again later.',
       );
