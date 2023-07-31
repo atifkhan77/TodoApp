@@ -21,14 +21,11 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // While Firebase is checking the auth state, show a loading screen.
             return const CircularProgressIndicator();
           } else {
             if (snapshot.hasData) {
-              // User is logged in, navigate to ToDoScreen.
               return const ToDoScreen();
             } else {
-              // User is logged out, navigate to LoginScreen.
               return const LoginScreen();
             }
           }
