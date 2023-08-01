@@ -1,35 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todo_app/CRUD/servicesTodo.dart';
 
-class ReadTodoScreen extends StatefulWidget {
+class ReadTodoScreen extends StatelessWidget {
   const ReadTodoScreen({Key? key}) : super(key: key);
-
-  @override
-  State<ReadTodoScreen> createState() => _ReadTodoScreenState();
-}
-
-class _ReadTodoScreenState extends State<ReadTodoScreen> {
-  List<TodoVars> todos = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadTodos();
-  }
-
-  void _loadTodos() async {
-    try {
-      List<TodoVars> fetchedTodos = await TodoService.fetchTodos();
-      setState(() {
-        todos = fetchedTodos.cast<TodoVars>();
-      });
-    } catch (e) {
-      debugPrint('Error fetching todos: $e');
-      Fluttertoast.showToast(
-          msg: 'Error fetching todos. Please try again later.');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,20 +10,42 @@ class _ReadTodoScreenState extends State<ReadTodoScreen> {
       appBar: AppBar(
         title: const Text('Todo List'),
       ),
-      body: todos.isEmpty
-          ? const Center(
+      body: StreamBuilder<List<TodoVars>>(
+        stream: TodoService.fetchTodos(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.hasError) {
+            debugPrint('Error fetching todos: ${snapshot.error}');
+            return const Center(
+              child: Text('Error fetching todos.'),
+            );
+          }
+
+          final List<TodoVars> todos = snapshot.data ?? [];
+
+          if (todos.isEmpty) {
+            return const Center(
               child: Text('No todos available.'),
-            )
-          : ListView.builder(
-              itemCount: todos.length,
-              itemBuilder: (context, index) {
-                TodoVars todo = todos[index];
-                return ListTile(
-                  title: Text(todo.title),
-                  subtitle: Text(todo.description),
-                );
-              },
-            ),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: todos.length,
+            itemBuilder: (context, index) {
+              TodoVars todo = todos[index];
+              return ListTile(
+                title: Text(todo.title),
+                subtitle: Text(todo.description),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

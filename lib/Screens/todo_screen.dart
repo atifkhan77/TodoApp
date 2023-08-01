@@ -1,55 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/Screens/signup_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:todo_app/CRUD/servicesTodo.dart';
 import 'package:todo_app/Screens/update_task_screen.dart';
-import '../CRUD/servicesTodo.dart';
-import 'add_task_screen.dart';
+import 'package:todo_app/Screens/add_task_screen.dart';
 
-class ToDoScreen extends StatefulWidget {
-  const ToDoScreen({Key? key}) : super(key: key);
-
-  @override
-  State<ToDoScreen> createState() => _ToDoScreenState();
-}
-
-class _ToDoScreenState extends State<ToDoScreen> {
-  List<TodoVars> todos = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadTodos();
-  }
-
-  void _loadTodos() {
-    try {
-      Stream<List<TodoVars>> fetchedTodos =
-          TodoService.fetchTodos() as Stream<List<TodoVars>>;
-      setState(() {
-        todos = fetchedTodos as List<TodoVars>;
-      });
-    } catch (e) {
-      debugPrint('Error fetching todos: $e');
-    }
-  }
-
-  void _updateTodo(TodoVars todo) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => UpdateTodoScreen(todo: todo),
-      ),
-    );
-  }
-
-  void _deleteTodo(TodoVars todo) async {
-    try {
-      await TodoService.deleteTodo(todo.id);
-      debugPrint('Todo deleted successfully');
-      _loadTodos();
-    } catch (e) {
-      debugPrint('Error deleting todo: $e');
-    }
-  }
-
+class ToDoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,12 +13,10 @@ class _ToDoScreenState extends State<ToDoScreen> {
         title: const Text('Todo List'),
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const SignupScreen(),
-                ),
-              );
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context)
+                  .pop(); // Go back to the previous screen (login screen)
             },
             icon: const Icon(Icons.logout),
           ),
@@ -78,34 +32,76 @@ class _ToDoScreenState extends State<ToDoScreen> {
         },
         child: const Icon(Icons.add),
       ),
-      body: ListView.builder(
-        itemCount: todos.length,
-        itemBuilder: (context, index) {
-          TodoVars todo = todos[index];
-          return ListTile(
-            title: Text(todo.title),
-            subtitle: Text(todo.description),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    _updateTodo(todo);
-                  },
-                  icon: const Icon(Icons.edit),
+      body: StreamBuilder<List<TodoVars>>(
+        stream: TodoService.fetchTodos(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.hasError) {
+            debugPrint('Error fetching todos: ${snapshot.error}');
+            return const Center(
+              child: Text('Error fetching todos.'),
+            );
+          }
+
+          final List<TodoVars> todos = snapshot.data ?? [];
+
+          if (todos.isEmpty) {
+            return const Center(
+              child: Text('No todos available.'),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: todos.length,
+            itemBuilder: (context, index) {
+              TodoVars todo = todos[index];
+              return ListTile(
+                title: Text(todo.title),
+                subtitle: Text(todo.description),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        _updateTodo(context, todo);
+                      },
+                      icon: const Icon(Icons.edit),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        _deleteTodo(context, todo);
+                      },
+                      icon: const Icon(Icons.delete),
+                    ),
+                  ],
                 ),
-                IconButton(
-                  onPressed: () {
-                    _deleteTodo(todo);
-                    _loadTodos();
-                  },
-                  icon: const Icon(Icons.delete),
-                ),
-              ],
-            ),
+              );
+            },
           );
         },
       ),
     );
+  }
+
+  void _updateTodo(BuildContext context, TodoVars todo) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => UpdateTodoScreen(todo: todo),
+      ),
+    );
+  }
+
+  void _deleteTodo(BuildContext context, TodoVars todo) async {
+    try {
+      await TodoService.deleteTodo(todo.id);
+      Fluttertoast.showToast(msg: 'Todo deleted successfully');
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Error deleting todo: $e');
+    }
   }
 }

@@ -54,7 +54,6 @@ class _UpdateTodoScreenState extends State<UpdateTodoScreen> {
                 String description = _descriptionController.text.trim();
 
                 if (title.isNotEmpty && description.isNotEmpty) {
-        
                   Todo updatedTodo = Todo(
                     id: widget.todo.id,
                     title: title,

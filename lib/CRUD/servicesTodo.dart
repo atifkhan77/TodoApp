@@ -29,20 +29,20 @@ class TodoService {
     }
   }
 
-  static Future<List<TodoVars>> fetchTodos() async {
+  static Stream<List<TodoVars>> fetchTodos() {
     try {
-      QuerySnapshot snapshot = await todosRef.get();
-      List<TodoVars> fetchedTodos = snapshot.docs.map((doc) {
-        return TodoVars(
-          id: doc.id,
-          title: doc['title'],
-          description: doc['description'],
-        );
-      }).toList();
-      return fetchedTodos;
+      return todosRef.snapshots().map((snapshot) {
+        return snapshot.docs.map((doc) {
+          return TodoVars(
+            id: doc.id,
+            title: doc['title'],
+            description: doc['description'],
+          );
+        }).toList();
+      });
     } catch (e) {
       debugPrint('Error fetching todos: $e');
-      return [];
+      return Stream.value([]);
     }
   }
 

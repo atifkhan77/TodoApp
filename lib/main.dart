@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
             return const CircularProgressIndicator();
           } else {
             if (snapshot.hasData) {
-              return const ToDoScreen();
+              return ToDoScreen();
             } else {
               return const LoginScreen();
             }
