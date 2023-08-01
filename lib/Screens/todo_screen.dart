@@ -20,11 +20,12 @@ class _ToDoScreenState extends State<ToDoScreen> {
     _loadTodos();
   }
 
-  void _loadTodos() async {
+  void _loadTodos() {
     try {
-      List<TodoVars> fetchedTodos = await TodoService.fetchTodos();
+      Stream<List<TodoVars>> fetchedTodos =
+          TodoService.fetchTodos() as Stream<List<TodoVars>>;
       setState(() {
-        todos = fetchedTodos;
+        todos = fetchedTodos as List<TodoVars>;
       });
     } catch (e) {
       debugPrint('Error fetching todos: $e');
@@ -59,7 +60,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
             onPressed: () {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => SignupScreen(),
+                  builder: (context) => const SignupScreen(),
                 ),
               );
             },
@@ -96,6 +97,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
                 IconButton(
                   onPressed: () {
                     _deleteTodo(todo);
+                    _loadTodos();
                   },
                   icon: const Icon(Icons.delete),
                 ),
