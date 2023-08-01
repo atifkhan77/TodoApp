@@ -1,8 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todo_app/Screens/signup_screen.dart';
 import 'package:todo_app/Screens/todo_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'Auth/Auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -15,19 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<bool> _isUserRegistered(String email) async {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password:
-            '',
-      );
-      return userCredential.user != null;
-    } catch (e) {
-      return false;
-    }
-  }
+  final Auth _auth = Auth();
 
   Future<void> _handleLogin() async {
     String email = _emailController.text.trim();
@@ -38,61 +27,44 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    bool isRegistered = await _isUserRegistered(email);
-    if (!isRegistered) {
-      Fluttertoast.showToast(
-          msg: 'User not registered. Please register first.');
-      return;
-    }
+    User? user = await _auth.signInWithEmailAndPassword(email, password);
 
-    try {
+    if (user == null) {
+      Fluttertoast.showToast(
+        msg: 'Invalid email or password. Please try again.',
+      );
+    } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => ToDoScreen(),
         ),
       );
-    } catch (e) {
-      debugPrint('Login error: $e');
-      Fluttertoast.showToast(
-        msg: 'Login failed. Please check your email and password.',
-      );
     }
   }
 
   Future<void> _handleRegistration() async {
+    // Navigate to the SignupScreen for registration
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const SignupScreen(),
       ),
     );
-
-    try {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const ToDoScreen(),
-        ),
-      );
-    } catch (e) {
-      Fluttertoast.showToast(
-        msg: 'Registration failed. Please try again later.',
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login Screen'),
+        title: const Text('Login Screen'),
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               TextField(
                 controller: _emailController,
-                decoration: InputDecoration(hintText: 'Email'),
+                decoration: const InputDecoration(hintText: 'Email'),
               ),
               const SizedBox(
                 height: 20,
@@ -100,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: InputDecoration(hintText: 'Password'),
+                decoration: const InputDecoration(hintText: 'Password'),
               ),
               const SizedBox(
                 height: 20,
