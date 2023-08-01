@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:todo_app/Screens/todo_screen.dart';
 
@@ -12,10 +12,11 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  var fullNameConroller = TextEditingController();
-  var emailConroller = TextEditingController();
-  var passwordConroller = TextEditingController();
-  var confirmConroller = TextEditingController();
+  var fullNameController = TextEditingController();
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
+  var confirmController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,21 +29,21 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             children: [
               TextField(
-                controller: fullNameConroller,
+                controller: fullNameController,
                 decoration: InputDecoration(hintText: 'Name'),
               ),
               const SizedBox(
                 height: 10,
               ),
               TextField(
-                controller: emailConroller,
+                controller: emailController,
                 decoration: InputDecoration(hintText: 'Email'),
               ),
               const SizedBox(
                 height: 10,
               ),
               TextField(
-                controller: passwordConroller,
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(hintText: 'Password'),
               ),
@@ -50,36 +51,40 @@ class _SignupScreenState extends State<SignupScreen> {
                 height: 10,
               ),
               TextField(
-                controller: confirmConroller,
+                controller: confirmController,
                 obscureText: true,
                 decoration: InputDecoration(hintText: 'Confirm Password'),
               ),
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () async {
-                  var fullName = fullNameConroller.text.trim();
-                  var email = emailConroller.text.trim();
-                  var password = passwordConroller.text.trim();
-                  var confirm = confirmConroller.text.trim();
+                  var fullName = fullNameController.text.trim();
+                  var email = emailController.text.trim();
+                  var password = passwordController.text.trim();
+                  var confirm = confirmController.text.trim();
+
                   if (fullName.isEmpty ||
                       email.isEmpty ||
                       password.isEmpty ||
                       confirm.isEmpty) {
-                    Fluttertoast.showToast(msg: 'please fill all the fields');
+                    Fluttertoast.showToast(msg: 'Please fill all the fields');
                     return;
                   }
+
                   if (password.length < 6) {
                     Fluttertoast.showToast(
-                        msg: 'password showld be minimium 6 characters');
+                        msg: 'Password should be at least 6 characters');
                     return;
                   }
+
                   if (password != confirm) {
-                    Fluttertoast.showToast(msg: 'password not matched');
+                    Fluttertoast.showToast(msg: 'Passwords do not match');
                     return;
                   }
+
                   ProgressDialog progressDialog = ProgressDialog(
                     context,
-                    title: const Text('signing up '),
+                    title: const Text('Signing up'),
                     message: const Text('Please wait'),
                   );
 
@@ -91,16 +96,16 @@ class _SignupScreenState extends State<SignupScreen> {
                             email: email, password: password);
 
                     if (userCredential.user != null) {
-                      //store in realtime dataBase!!!(to learn)
+                      // Store in realtime database (To learn).
 
-                      Fluttertoast.showToast(msg: 'successfully register');
+                      Fluttertoast.showToast(msg: 'Successfully registered');
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => ToDoScreen(),
                         ),
                       );
                     } else {
-                      Fluttertoast.showToast(msg: 'signup Failed!');
+                      Fluttertoast.showToast(msg: 'Signup failed!');
                     }
 
                     progressDialog.dismiss();
@@ -110,10 +115,10 @@ class _SignupScreenState extends State<SignupScreen> {
                     if (e.code == 'email-already-in-use') {
                       Fluttertoast.showToast(msg: 'Email already in use');
                     } else if (e.code == 'weak-password') {
-                      Fluttertoast.showToast(msg: 'weak Password');
+                      Fluttertoast.showToast(msg: 'Weak password');
                     }
                   } catch (e) {
-                    Fluttertoast.showToast(msg: 'something went wrong');
+                    Fluttertoast.showToast(msg: 'Something went wrong');
                   }
                 },
                 child: const Text('Sign Up'),
