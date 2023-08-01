@@ -54,13 +54,13 @@ class _UpdateTodoScreenState extends State<UpdateTodoScreen> {
                 String description = _descriptionController.text.trim();
 
                 if (title.isNotEmpty && description.isNotEmpty) {
-                  Todo updatedTodo = Todo(
+                  TodoVars updatedTodo = TodoVars(
                     id: widget.todo.id,
                     title: title,
                     description: description,
                   );
 
-                  await TodoService.updateTodo(updatedTodo as TodoVars);
+                  await TodoService.updateTodo(updatedTodo);
 
                   Navigator.of(context).pop();
                 } else {
