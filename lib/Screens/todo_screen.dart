@@ -2,10 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todo_app/CRUD/servicesTodo.dart';
+import 'package:todo_app/Screens/login_screen.dart';
 import 'package:todo_app/Screens/update_task_screen.dart';
 import 'package:todo_app/Screens/add_task_screen.dart';
 
-class ToDoScreen extends StatelessWidget {
+class ToDoScreen extends StatefulWidget {
+  final String userId;
+
+  const ToDoScreen({Key? key, required this.userId}) : super(key: key);
+
+  @override
+  State<ToDoScreen> createState() => _ToDoScreenState();
+}
+
+class _ToDoScreenState extends State<ToDoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,9 +24,12 @@ class ToDoScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.of(context)
-                  .pop(); // Go back to the previous screen (login screen)
+              FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => LoginScreen(),
+                ),
+              );
             },
             icon: const Icon(Icons.logout),
           ),
@@ -26,14 +39,18 @@ class ToDoScreen extends StatelessWidget {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const AddTaskScreen(),
+              builder: (context) => AddTaskScreen(
+                userId: widget.userId,
+              ),
             ),
           );
         },
         child: const Icon(Icons.add),
       ),
+      // ignore: avoid_print
+
       body: StreamBuilder<List<TodoVars>>(
-        stream: TodoService.fetchTodos(),
+        stream: TodoService.fetchTodos(widget.userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(

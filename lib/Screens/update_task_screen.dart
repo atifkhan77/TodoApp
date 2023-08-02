@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../CRUD/servicesTodo.dart';
-import '../models/TodoModel.dart';
 
 class UpdateTodoScreen extends StatefulWidget {
   final TodoVars todo;
@@ -58,6 +57,7 @@ class _UpdateTodoScreenState extends State<UpdateTodoScreen> {
                     id: widget.todo.id,
                     title: title,
                     description: description,
+                    userId: widget.todo.userId,
                   );
 
                   await TodoService.updateTodo(updatedTodo);

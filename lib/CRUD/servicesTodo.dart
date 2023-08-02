@@ -5,11 +5,13 @@ class TodoVars {
   String id;
   String title;
   String description;
+  String userId;
 
   TodoVars({
     required this.id,
     required this.title,
     required this.description,
+    required this.userId,
   });
 }
 
@@ -17,32 +19,38 @@ class TodoService {
   static CollectionReference todosRef =
       FirebaseFirestore.instance.collection('todos');
 
-  static Future<void> addTodo(TodoVars todo) async {
+  static Future<void> addTodo(TodoVars todo, String userId) async {
     try {
       await todosRef.add({
         'title': todo.title,
         'description': todo.description,
+        'userId': userId,
       });
+      debugPrint("\n" + userId + "\n");
       debugPrint('Todo added successfully');
     } catch (e) {
       debugPrint('Error adding todo: $e');
     }
   }
 
-  static Stream<List<TodoVars>> fetchTodos() {
+  static Stream<List<TodoVars>> fetchTodos(String userId) {
     try {
-      return todosRef.snapshots().map((snapshot) {
+      return todosRef
+          .where('userId', isEqualTo: userId) // Filter todos based on user ID
+          .snapshots()
+          .map((snapshot) {
         return snapshot.docs.map((doc) {
           return TodoVars(
             id: doc.id,
             title: doc['title'],
             description: doc['description'],
+            userId: doc['userId'],
           );
         }).toList();
       });
     } catch (e) {
       debugPrint('Error fetching todos: $e');
-      return Stream.value([]);
+      return Stream.value([]); // Return an empty stream on error
     }
   }
 

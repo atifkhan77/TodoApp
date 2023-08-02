@@ -25,12 +25,12 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               TextField(
                 controller: fullNameController,
-                decoration: InputDecoration(hintText: 'Name'),
+                decoration: const InputDecoration(hintText: 'Name'),
               ),
               const SizedBox(
                 height: 10,
@@ -45,7 +45,7 @@ class _SignupScreenState extends State<SignupScreen> {
               TextField(
                 controller: passwordController,
                 obscureText: true,
-                decoration: InputDecoration(hintText: 'Password'),
+                decoration: const InputDecoration(hintText: 'Password'),
               ),
               const SizedBox(
                 height: 10,
@@ -53,7 +53,7 @@ class _SignupScreenState extends State<SignupScreen> {
               TextField(
                 controller: confirmController,
                 obscureText: true,
-                decoration: InputDecoration(hintText: 'Confirm Password'),
+                decoration: const InputDecoration(hintText: 'Confirm Password'),
               ),
               const SizedBox(height: 10),
               ElevatedButton(
@@ -96,12 +96,13 @@ class _SignupScreenState extends State<SignupScreen> {
                             email: email, password: password);
 
                     if (userCredential.user != null) {
+                      String userId = userCredential.user!.uid;
                       // Store in realtime database (To learn).
 
                       Fluttertoast.showToast(msg: 'Successfully registered');
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (context) => ToDoScreen(),
+                          builder: (context) => ToDoScreen(userId: userId),
                         ),
                       );
                     } else {

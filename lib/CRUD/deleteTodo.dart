@@ -33,7 +33,7 @@ class _DeleteTodoScreenState extends State<DeleteTodoScreen> {
               onPressed: () async {
                 try {
                   await TodoService.deleteTodo(widget.todo.id);
-                  print('Todo deleted successfully');
+                  debugPrint('Todo deleted successfully');
                   Navigator.of(context).pop();
                 } catch (e) {
                   print('Error deleting todo: $e');

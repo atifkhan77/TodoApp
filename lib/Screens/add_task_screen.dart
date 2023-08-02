@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../CRUD/createTodo.dart'; 
+import '../CRUD/createTodo.dart';
 
 class AddTaskScreen extends StatefulWidget {
-  const AddTaskScreen({Key? key}) : super(key: key);
+  final String userId;
+  const AddTaskScreen({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<AddTaskScreen> createState() => _AddTaskScreenState();
@@ -13,8 +14,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   @override
   void dispose() {
-    _taskTitleController
-        .dispose();
+    _taskTitleController.dispose();
     super.dispose();
   }
 
@@ -37,16 +37,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               onPressed: () {
                 String taskTitle = _taskTitleController.text.trim();
                 if (taskTitle.isNotEmpty) {
-                  TodoAdd.addTodo(
-                      taskTitle); 
-                  Navigator.pop(
-                      context); 
+                  TodoAdd.addTodo(taskTitle, widget.userId);
+                  Navigator.pop(context);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Please enter a task'),
-                      duration:
-                          const Duration(seconds: 2), 
+                    const SnackBar(
+                      content: Text('Please enter a task'),
+                      duration: Duration(seconds: 2),
                     ),
                   );
                 }

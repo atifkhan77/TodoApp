@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/CRUD/servicesTodo.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ReadTodoScreen extends StatelessWidget {
   const ReadTodoScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Get the current user's ID
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Todo List'),
       ),
       body: StreamBuilder<List<TodoVars>>(
-        stream: TodoService.fetchTodos(),
+        stream: TodoService.fetchTodos(userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(

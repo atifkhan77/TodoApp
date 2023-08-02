@@ -36,7 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => ToDoScreen(),
+          builder: (context) => ToDoScreen(
+              userId: user.uid), // Pass the user's UID to the ToDoScreen
         ),
       );
     }
