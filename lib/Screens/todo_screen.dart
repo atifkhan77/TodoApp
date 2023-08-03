@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todo_app/CRUD/servicesTodo.dart';
 import 'package:todo_app/Screens/login_screen.dart';
+import 'package:todo_app/Screens/profile_screen.dart';
 import 'package:todo_app/Screens/update_task_screen.dart';
 import 'package:todo_app/Screens/add_task_screen.dart';
 
@@ -27,11 +28,21 @@ class _ToDoScreenState extends State<ToDoScreen> {
               FirebaseAuth.instance.signOut();
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => LoginScreen(),
+                  builder: (context) => const LoginScreen(),
                 ),
               );
             },
             icon: const Icon(Icons.logout),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const ProfileScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.person),
           ),
         ],
       ),
