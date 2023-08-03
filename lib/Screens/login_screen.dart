@@ -85,6 +85,15 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 20,
               ),
+              ElevatedButton(
+                onPressed: () async {
+                  await Auth.signInWithGoogle();
+                },
+                child: const Text('Google Sign in'),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
