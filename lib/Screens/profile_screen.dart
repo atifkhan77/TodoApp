@@ -94,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ? FileImage(_imageFile!)
                   : (_profilePicUrl != null
                       ? NetworkImage(_profilePicUrl!) // Explicit cast to String
-                      : Image.asset('assets/empty_image.png').image),
+                      : Image.asset('lib/assets/blank.png').image),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
