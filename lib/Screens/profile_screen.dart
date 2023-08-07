@@ -1,124 +1,133 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'auth/cloud.dart';
+import 'auth/firebaseAdd.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
-
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  File? _imageFile;
-  String? _profilePicUrl;
-  String? _userId;
-
-  @override
-  void initState() {
-    super.initState();
-    _userId = FirebaseAuth.instance.currentUser?.uid;
-    _loadProfilePicUrl();
-  }
-
-  Future<void> _loadProfilePicUrl() async {
-    try {
-      DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(_userId)
-              .get();
-      if (userSnapshot.exists) {
-        setState(() {
-          _profilePicUrl = userSnapshot.get('profilePicUrl') as String?;
-        });
-      }
-    } catch (e) {
-      print('Error loading profile picture: $e');
-    }
-  }
-
-  Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
-    }
-  }
-
-  Future<String?> _uploadImage(File? imageFile) async {
-    if (imageFile == null) return null;
-
-    try {
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('profile_pics')
-          .child(fileName);
-      await ref.putFile(imageFile);
-      return await ref.getDownloadURL();
-    } catch (e) {
-      debugPrint('Error uploading image: $e');
-      return null;
-    }
-  }
-
+  File? file;
+  String? imgUrl;
+  FilePickerResult? result;
+  bool? isShowfileImage = true;
+  String? imgeUrl;
+  String userEmail = FirebaseAuth.instance.currentUser!.email.toString();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile Screen'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(Icons.arrow_back),
-            color: Colors.white,
-          )
-        ],
+        title: const Text(
+          'Profile',
+        ),
+        centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 60,
-              backgroundColor: Colors.grey,
-              backgroundImage: _imageFile != null
-                  ? FileImage(_imageFile!)
-                  : (_profilePicUrl != null
-                      ? NetworkImage(_profilePicUrl!) // Explicit cast to String
-                      : Image.asset('lib/assets/blank.png').image),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _pickImage,
-              child: const Text('Upload Profile Picture'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                String? imageUrl = await _uploadImage(_imageFile);
-                if (imageUrl != null) {
-                  // Save the image URL to Firebase Firestore
-                  await FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(_userId)
-                      .update({'profilePicUrl': imageUrl});
-                  setState(() {
-                    _profilePicUrl = imageUrl;
-                  });
-                }
-              },
-              child: const Text('Save Profile Picture'),
-            ),
-          ],
+      body: SafeArea(
+        child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          future: FirebaseAdd.getUserEmailUrl(
+            userEmail: userEmail.trim(),
+          ),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.connectionState == ConnectionState.none) {
+              return const Text('return no data');
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
+                return SizedBox(
+                    height: 250,
+                    width: double.infinity,
+                    child: ListView.separated(
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 80),
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    debugPrint(
+                                        'CURRENT USER ID ARE: ${FirebaseAuth.instance.currentUser!.uid}');
+                                    result =
+                                        await FilePicker.platform.pickFiles();
+                                    file = File(
+                                      result!.files.single.path.toString(),
+                                    );
+                                    imgUrl =
+                                        await CloudFirebaseStorage.uploadImage(
+                                      file!,
+                                      DateTime.now()
+                                          .millisecondsSinceEpoch
+                                          .toString(),
+                                    );
+                                    await FirebaseFirestore.instance
+                                        .collection('User')
+                                        .doc(userEmail)
+                                        .update({'url': imgUrl});
+                                    setState(() {
+                                      isShowfileImage = true;
+                                    });
+                                  },
+                                  child: isShowfileImage == true
+                                      ? SizedBox(
+                                          height: 120,
+                                          width: 120,
+                                          child: ClipOval(
+                                            child: Container(
+                                              height: 50,
+                                              width: 50,
+                                              child: CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                  snapshot.data!.docs[index]
+                                                      ['url'],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : const CircularProgressIndicator(),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  snapshot.data!.docs[index]['name'],
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  snapshot.data!.docs[index]['email'],
+                                  style: const TextStyle(
+                                      fontSize: 8, color: Colors.blue),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        },
+                        itemCount: snapshot.data!.docs.length));
+              }
+            }
+            debugPrint(
+                'THe DATA ARE AVAALIABLE:${snapshot.connectionState == ConnectionState.done}');
+            return Center(
+              child: Text(
+                snapshot.data!.docs[0]['email'].toString(),
+              ),
+            );
+          },
         ),
       ),
     );

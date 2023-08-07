@@ -43,10 +43,11 @@ dependencies:
   fluttertoast: ^8.2.2
   ndialog: ^4.3.1
   intl: ^0.18.1
-  image_picker: ^1.0.1
   path_provider: ^2.0.15
   cloud_firestore: ^4.8.4
   google_sign_in: ^6.1.4
+  cached_network_image: ^3.2.3
+  file_picker: ^5.3.3
   
 
 dev_dependencies:

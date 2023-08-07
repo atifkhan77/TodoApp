@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:todo_app/Screens/todo_screen.dart';
+import 'auth/firebaseAdd.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -94,6 +95,10 @@ class _SignupScreenState extends State<SignupScreen> {
                     UserCredential userCredential =
                         await auth.createUserWithEmailAndPassword(
                             email: email, password: password);
+                    FirebaseAdd.addUserData(
+                        userEmail:
+                            FirebaseAuth.instance.currentUser!.email.toString(),
+                        name: fullNameController.text);
 
                     if (userCredential.user != null) {
                       String userId = userCredential.user!.uid;
