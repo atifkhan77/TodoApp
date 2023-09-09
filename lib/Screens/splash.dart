@@ -3,7 +3,6 @@ import 'package:todo_app/Screens/login_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -32,7 +31,7 @@ class SplashScreen extends StatelessWidget {
                         color: Colors.black,
                         blurRadius: 1.0,
                         offset: Offset(1.0, 1.0),
-                      )
+                      ),
                     ],
                     color: Colors.black,
                     fontSize: 16,
@@ -58,7 +57,7 @@ class SplashScreen extends StatelessWidget {
                         2.0,
                         2.0,
                       ),
-                    )
+                    ),
                   ],
                 ),
                 child: const Text(
@@ -93,7 +92,7 @@ class SplashScreen extends StatelessWidget {
                           2.0,
                           2.0,
                         ),
-                      )
+                      ),
                     ],
                   ),
                   child: const Center(
@@ -104,7 +103,7 @@ class SplashScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
