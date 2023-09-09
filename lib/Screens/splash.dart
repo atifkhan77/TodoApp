@@ -52,11 +52,11 @@ class SplashScreen extends StatelessWidget {
                   boxShadow: const [
                     BoxShadow(
                       color: Colors.grey,
-                      blurRadius: 3.0, // soften the shadow
-                      spreadRadius: 3.0, //extend the shadow
+                      blurRadius: 3.0,
+                      spreadRadius: 3.0,
                       offset: Offset(
-                        2.0, // Move to right 5  horizontally
-                        2.0, // Move to bottom 5 Vertically
+                        2.0,
+                        2.0,
                       ),
                     )
                   ],
@@ -87,11 +87,11 @@ class SplashScreen extends StatelessWidget {
                     boxShadow: const [
                       BoxShadow(
                         color: Colors.grey,
-                        blurRadius: 3.0, // soften the shadow
-                        spreadRadius: 3.0, //extend the shadow
+                        blurRadius: 3.0,
+                        spreadRadius: 3.0,
                         offset: Offset(
-                          2.0, // Move to right 5  horizontally
-                          2.0, // Move to bottom 5 Vertically
+                          2.0,
+                          2.0,
                         ),
                       )
                     ],
