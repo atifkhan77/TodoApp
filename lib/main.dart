@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:todo_app/Screens/login_screen.dart';
+import 'package:todo_app/Screens/splash.dart';
 import 'package:todo_app/Screens/todo_screen.dart';
 
 Future<void> main() async {
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
               return ToDoScreen(userId: snapshot.data!.uid);
             } else {
               // If user is not logged in, go to LoginScreen
-              return const LoginScreen();
+              return const SplashScreen();
             }
           }
         },

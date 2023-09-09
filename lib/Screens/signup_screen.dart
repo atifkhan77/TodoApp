@@ -38,7 +38,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               TextField(
                 controller: emailController,
-                decoration: InputDecoration(hintText: 'Email'),
+                decoration:const InputDecoration(hintText: 'Email'),
               ),
               const SizedBox(
                 height: 10,
@@ -105,6 +105,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       // Store in realtime database (To learn).
 
                       Fluttertoast.showToast(msg: 'Successfully registered');
+                      // ignore: use_build_context_synchronously
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => ToDoScreen(userId: userId),
