@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:todo_app/Screens/todo_screen.dart';
+import 'package:todo_app/Widgets/button.dart';
 import 'auth/firebaseAdd.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -21,7 +22,9 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(201, 240, 232, 0.973),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(248, 102, 230, 204),
         title: const Text('Signup Screen'),
       ),
       body: Center(
@@ -29,36 +32,59 @@ class _SignupScreenState extends State<SignupScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
+              const SizedBox(
+                height: 50,
+              ),
               TextField(
                 controller: fullNameController,
-                decoration: const InputDecoration(hintText: 'Name'),
+                decoration: InputDecoration(
+                  hintText: 'Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
               ),
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
               TextField(
                 controller: emailController,
-                decoration:const InputDecoration(hintText: 'Email'),
+                decoration: InputDecoration(
+                  hintText: 'Email',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
               ),
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
               TextField(
                 controller: passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(hintText: 'Password'),
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
               ),
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
               TextField(
                 controller: confirmController,
                 obscureText: true,
-                decoration: const InputDecoration(hintText: 'Confirm Password'),
+                decoration: InputDecoration(
+                  hintText: 'Confirm Password',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
               ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () async {
+              const SizedBox(height: 50),
+              InkWell(
+                onTap: () async {
                   var fullName = fullNameController.text.trim();
                   var email = emailController.text.trim();
                   var password = passwordController.text.trim();
@@ -128,7 +154,11 @@ class _SignupScreenState extends State<SignupScreen> {
                     Fluttertoast.showToast(msg: 'Something went wrong');
                   }
                 },
-                child: const Text('Sign Up'),
+                child: const CustomButton(
+                  height: 40,
+                  width: 150,
+                  text: "Sign Up",
+                ),
               ),
               const SizedBox(
                 height: 10,
