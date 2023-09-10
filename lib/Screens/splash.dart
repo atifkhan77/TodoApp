@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/Screens/login_screen.dart';
+import 'package:todo_app/Widgets/button.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -69,41 +70,43 @@ class SplashScreen extends StatelessWidget {
                 height: 30,
               ),
               InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const LoginScreen(),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: 350,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(248, 102, 230, 204),
-                    border: Border.all(width: 1.5, color: Colors.black),
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.grey,
-                        blurRadius: 3.0,
-                        spreadRadius: 3.0,
-                        offset: Offset(
-                          2.0,
-                          2.0,
-                        ),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
                       ),
-                    ],
+                    );
+                  },
+                  child: const CustomButton(
+                      height: 50, width: 350, text: "Get Started")
+                  // Container(
+                  //   width: 350,
+                  //   height: 50,
+                  //   decoration: BoxDecoration(
+                  //     color: const Color.fromARGB(248, 102, 230, 204),
+                  //     border: Border.all(width: 1.5, color: Colors.black),
+                  //     borderRadius: BorderRadius.circular(10),
+                  //     boxShadow: const [
+                  //       BoxShadow(
+                  //         color: Colors.grey,
+                  //         blurRadius: 3.0,
+                  //         spreadRadius: 3.0,
+                  //         offset: Offset(
+                  //           2.0,
+                  //           2.0,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  //   child: const Center(
+                  //     child: Text(
+                  //       'Get Started',
+                  //       style:
+                  //           TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                  //     ),
+                  //   ),
+                  // ),
                   ),
-                  child: const Center(
-                    child: Text(
-                      'Get Started',
-                      style:
-                          TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),

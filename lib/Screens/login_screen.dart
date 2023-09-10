@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todo_app/Screens/signup_screen.dart';
 import 'package:todo_app/Screens/todo_screen.dart';
+import 'package:todo_app/Widgets/button.dart';
 import 'Auth/Auth.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -34,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
         msg: 'Invalid email or password. Please try again.',
       );
     } else {
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => ToDoScreen(
@@ -55,17 +57,28 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(201, 240, 232, 0.973),
       appBar: AppBar(
-        title: const Text('Login Screen'),
+        backgroundColor: const Color.fromARGB(248, 102, 230, 204),
+        title: const Text(
+          'Login Screen',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
+              const SizedBox(height: 50),
               TextField(
                 controller: _emailController,
-                decoration: const InputDecoration(hintText: 'Email'),
+                decoration: InputDecoration(
+                  hintText: 'Email',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
               ),
               const SizedBox(
                 height: 20,
@@ -73,23 +86,36 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(hintText: 'Password'),
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
               ),
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
-                onPressed: _handleLogin,
-                child: const Text('Login'),
+              InkWell(
+                onTap: _handleLogin,
+                child: const CustomButton(
+                  height: 40,
+                  width: 150,
+                  text: "Login",
+                ),
               ),
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
-                onPressed: () async {
+              InkWell(
+                onTap: () async {
                   await Auth.signInWithGoogle();
                 },
-                child: const Text('Google Sign in'),
+                child: const CustomButton(
+                  height: 40,
+                  width: 180,
+                  text: 'Google Sign in',
+                ),
               ),
               const SizedBox(
                 height: 20,
@@ -97,10 +123,17 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Not registered yet? '),
+                  const Text(
+                    'Not registered yet? ',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  ),
                   TextButton(
                     onPressed: _handleRegistration,
-                    child: const Text('Register Now'),
+                    child: const Text(
+                      'Register Now',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
                   ),
                 ],
               ),
