@@ -20,7 +20,9 @@ class _ToDoScreenState extends State<ToDoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(201, 240, 232, 0.973),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(248, 102, 230, 204),
         title: const Text('Todo List'),
         actions: [
           IconButton(
@@ -47,6 +49,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color.fromARGB(248, 102, 230, 204),
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(

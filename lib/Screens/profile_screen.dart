@@ -22,6 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(201, 240, 232, 0.973),
       appBar: AppBar(
         title: const Text(
           'Profile',
