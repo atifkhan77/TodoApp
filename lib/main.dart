@@ -24,10 +24,8 @@ class MyApp extends StatelessWidget {
             return const CircularProgressIndicator();
           } else {
             if (snapshot.hasData) {
-              // If user is logged in, go to ToDoScreen
               return ToDoScreen(userId: snapshot.data!.uid);
             } else {
-              // If user is not logged in, go to LoginScreen
               return const SplashScreen();
             }
           }

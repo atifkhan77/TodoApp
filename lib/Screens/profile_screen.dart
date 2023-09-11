@@ -42,83 +42,84 @@ class _ProfileScreenState extends State<ProfileScreen> {
             } else if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
                 return SizedBox(
-                    height: 250,
-                    width: double.infinity,
-                    child: ListView.separated(
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 80),
-                            child: Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    debugPrint(
-                                        'CURRENT USER ID ARE: ${FirebaseAuth.instance.currentUser!.uid}');
-                                    result =
-                                        await FilePicker.platform.pickFiles();
-                                    file = File(
-                                      result!.files.single.path.toString(),
-                                    );
-                                    imgUrl =
-                                        await CloudFirebaseStorage.uploadImage(
-                                      file!,
-                                      DateTime.now()
-                                          .millisecondsSinceEpoch
-                                          .toString(),
-                                    );
-                                    await FirebaseFirestore.instance
-                                        .collection('User')
-                                        .doc(userEmail)
-                                        .update({'url': imgUrl});
-                                    setState(() {
-                                      isShowfileImage = true;
-                                    });
-                                  },
-                                  child: isShowfileImage == true
-                                      ? SizedBox(
-                                          height: 120,
-                                          width: 120,
-                                          child: ClipOval(
-                                            child: Container(
-                                              height: 50,
-                                              width: 50,
-                                              child: CircleAvatar(
-                                                backgroundImage: NetworkImage(
-                                                  snapshot.data!.docs[index]
-                                                      ['url'],
-                                                ),
+                  height: 250,
+                  width: double.infinity,
+                  child: ListView.separated(
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 80),
+                          child: Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  debugPrint(
+                                      'CURRENT USER ID ARE: ${FirebaseAuth.instance.currentUser!.uid}');
+                                  result =
+                                      await FilePicker.platform.pickFiles();
+                                  file = File(
+                                    result!.files.single.path.toString(),
+                                  );
+                                  imgUrl =
+                                      await CloudFirebaseStorage.uploadImage(
+                                    file!,
+                                    DateTime.now()
+                                        .millisecondsSinceEpoch
+                                        .toString(),
+                                  );
+                                  await FirebaseFirestore.instance
+                                      .collection('User')
+                                      .doc(userEmail)
+                                      .update({'url': imgUrl});
+                                  setState(() {
+                                    isShowfileImage = true;
+                                  });
+                                },
+                                child: isShowfileImage == true
+                                    ? SizedBox(
+                                        height: 120,
+                                        width: 120,
+                                        child: ClipOval(
+                                          child: SizedBox(
+                                            height: 50,
+                                            width: 50,
+                                            child: CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                snapshot.data!.docs[index]
+                                                    ['url'],
                                               ),
                                             ),
                                           ),
-                                        )
-                                      : const CircularProgressIndicator(),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Text(
-                                  snapshot.data!.docs[index]['name'],
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  snapshot.data!.docs[index]['email'],
-                                  style: const TextStyle(
-                                      fontSize: 8, color: Colors.blue),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        },
-                        itemCount: snapshot.data!.docs.length));
+                                        ),
+                                      )
+                                    : const CircularProgressIndicator(),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                snapshot.data!.docs[index]['name'],
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                snapshot.data!.docs[index]['email'],
+                                style: const TextStyle(
+                                    fontSize: 8, color: Colors.blue),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                      itemCount: snapshot.data!.docs.length),
+                );
               }
             }
             debugPrint(

@@ -17,14 +17,15 @@ class LandingScreen extends StatelessWidget {
           children: [
             const FlutterLogo(size: 100),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const LoginScreen(),
-                    ),
-                  );
-                },
-                child: const Text('Enter'))
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ),
+                );
+              },
+              child: const Text('Enter'),
+            ),
           ],
         ),
       ),

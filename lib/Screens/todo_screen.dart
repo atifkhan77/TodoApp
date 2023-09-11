@@ -61,8 +61,6 @@ class _ToDoScreenState extends State<ToDoScreen> {
         },
         child: const Icon(Icons.add),
       ),
-      // ignore: avoid_print
-
       body: StreamBuilder<List<TodoVars>>(
         stream: TodoService.fetchTodos(widget.userId),
         builder: (context, snapshot) {

@@ -128,10 +128,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
                     if (userCredential.user != null) {
                       String userId = userCredential.user!.uid;
-                      // Store in realtime database (To learn).
 
                       Fluttertoast.showToast(msg: 'Successfully registered');
-                      // ignore: use_build_context_synchronously
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => ToDoScreen(userId: userId),
